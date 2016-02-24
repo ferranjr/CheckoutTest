@@ -35,8 +35,20 @@ object Checkout {
     }
   }
 
+  /**
+   * Calculates price given a Basket
+   * @param in the basket to checkout
+   * @return
+   */
+  def checkPrice(in: Basket): BigDecimal = {
+    in.foldLeft(BigDecimal(0))( (acc, item) => acc + item.price )
+  }
+
 
   def main(args: Array[String]): Unit = {
-    println("Hello, world!")
+    println(
+      s"""
+         |Basket Total: ${checkPrice(Basket(args))}
+       """.stripMargin)
   }
 }

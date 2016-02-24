@@ -1,5 +1,5 @@
 import com.ferran.Checkout.Basket
-import com.ferran.{Orange, Apple, Item}
+import com.ferran.{Checkout, Orange, Apple, Item}
 import org.specs2.mutable.Specification
 
 class CheckoutSpecs extends Specification {
@@ -32,6 +32,19 @@ class CheckoutSpecs extends Specification {
     """Create a proper basket with only the valid strings, ignore rest""" in {
       val test: Array[String] = Array("apple", "orange", "apple", "unkown")
       Basket(test) === Seq(Apple, Orange, Apple)
+    }
+  }
+
+  """Checkout""" should {
+
+    """Calculate price from empty basket properly""" in {
+      val test:Basket = Seq.empty[Item]
+      Checkout.checkPrice(test) === 0
+    }
+
+    """Calculate price from basket properly""" in {
+      val test:Basket = Seq(Apple, Apple, Orange, Apple)
+      Checkout.checkPrice(test) === 2.05
     }
   }
 }
