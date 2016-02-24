@@ -13,6 +13,12 @@ sealed abstract class Item( val price: BigDecimal ){
    * @return
    */
   def offer:Offer
+
+  /**
+   * Represents name of the item type
+   * @return
+   */
+  def name:String
 }
 case object Apple extends Item(0.6){
   /**
@@ -20,6 +26,8 @@ case object Apple extends Item(0.6){
    * Buy One Get One Free
    */
   val offer:Offer = (2,1)
+
+  val name: String = "apple"
 }
 case object Orange extends Item(0.25){
   /**
@@ -27,6 +35,8 @@ case object Orange extends Item(0.25){
    * Get 3 for the price of 2
    */
   val offer:Offer = (3,1)
+
+  val name: String = "orange"
 }
 
 object Item {
@@ -38,10 +48,10 @@ object Item {
    * @return
    */
   def fromString(in: String): Option[Item] =
-    in match {
-      case "apple" => Some(Apple)
-      case "orange" => Some(Orange)
-      case _ => None
+    in.toLowerCase match {
+      case Apple.name   => Some(Apple)
+      case Orange.name  => Some(Orange)
+      case _            => None
     }
 }
 
@@ -72,6 +82,7 @@ object Checkout {
     (in.length - itemsToDiscount) * price
   }
 
+
   /**
    * Calculates price given a Basket
    * @param in the basket to checkout
@@ -80,16 +91,20 @@ object Checkout {
   def checkPrice(in: Basket): BigDecimal = {
     in
       .groupBy{
-        case Apple => "apple"
-        case Orange => "orange"
+        case Apple  => Apple.name
+        case Orange => Orange.name
       }
       .foldLeft(BigDecimal(0)){
-        case (acc, ("apple", apples))   => acc + getPriceWithOffer(apples, Apple.price, Apple.offer)
-        case (acc, ("orange", oranges)) => acc + getPriceWithOffer(oranges, Orange.price, Orange.offer)
+        case (acc, (Apple.name, apples))   => acc + getPriceWithOffer(apples, Apple.price, Apple.offer)
+        case (acc, (Orange.name, oranges)) => acc + getPriceWithOffer(oranges, Orange.price, Orange.offer)
       }
   }
 
 
+  /**
+   * Main function to test the application
+   * @param args
+   */
   def main(args: Array[String]): Unit = {
     println(
       s"""
