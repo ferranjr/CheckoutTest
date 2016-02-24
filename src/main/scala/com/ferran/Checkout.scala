@@ -59,12 +59,34 @@ object Checkout {
   }
 
   /**
+   * Given a sequence of same type of items and the info about offer and price,
+   * returns the final price for that type of items
+   *
+   * @param in sequence of items to check price with offer
+   * @param price price for that type if items
+   * @param offer offer to apply to that type of item, if possible
+   * @return
+   */
+  def getPriceWithOffer(in: Seq[Item], price: BigDecimal, offer: Item#Offer): BigDecimal = {
+    val itemsToDiscount = (in.length/offer._1) * offer._2
+    (in.length - itemsToDiscount) * price
+  }
+
+  /**
    * Calculates price given a Basket
    * @param in the basket to checkout
    * @return
    */
   def checkPrice(in: Basket): BigDecimal = {
-    in.foldLeft(BigDecimal(0))( (acc, item) => acc + item.price )
+    in
+      .groupBy{
+        case Apple => "apple"
+        case Orange => "orange"
+      }
+      .foldLeft(BigDecimal(0)){
+        case (acc, ("apple", apples))   => acc + getPriceWithOffer(apples, Apple.price, Apple.offer)
+        case (acc, ("orange", oranges)) => acc + getPriceWithOffer(oranges, Orange.price, Orange.offer)
+      }
   }
 
 

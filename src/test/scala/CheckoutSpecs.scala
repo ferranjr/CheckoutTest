@@ -42,9 +42,34 @@ class CheckoutSpecs extends Specification {
       Checkout.checkPrice(test) === 0
     }
 
-    """Calculate price from basket properly""" in {
-      val test:Basket = Seq(Apple, Apple, Orange, Apple)
-      Checkout.checkPrice(test) === 2.05
+    """Calculate price from basket properly no offers to apply""" in {
+      val test:Basket = Seq(Apple, Orange, Orange)
+      Checkout.checkPrice(test) === 1.10
+    }
+
+    """Calculate single Apple offer price""" in {
+      val test:Basket = Seq(Apple, Apple)
+      Checkout.checkPrice(test) === 0.6
+    }
+
+    """Calculate multiple Apple offers""" in {
+      val test:Basket = Seq(Apple, Apple, Apple, Apple, Apple)
+      Checkout.checkPrice(test) === 1.8
+    }
+
+    """Calculate single Orange offer price""" in {
+      val test:Basket = Seq(Orange, Orange, Orange)
+      Checkout.checkPrice(test) === 0.5
+    }
+
+    """Calculate multiple Orange offers""" in {
+      val test:Basket = Seq(Orange, Orange, Orange, Orange, Orange, Orange, Orange)
+      Checkout.checkPrice(test) === 1.25
+    }
+
+    """Calculat mix of offers""" in {
+      val test:Basket = Seq(Orange, Apple, Orange, Apple, Orange)
+      Checkout.checkPrice(test) === 1.1
     }
   }
 }
