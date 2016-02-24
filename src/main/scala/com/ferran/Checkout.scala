@@ -2,9 +2,32 @@ package com.ferran
 
 
 // Items can be added to a basket
-sealed abstract class Item( val price: BigDecimal )
-case object Apple extends Item(0.6)
-case object Orange extends Item(0.25)
+sealed abstract class Item( val price: BigDecimal ){
+
+  type ItemsToQualify = Int
+  type ItemsToDiscount = Int
+  type Offer = (ItemsToQualify, ItemsToDiscount)
+
+  /**
+   * Represents offer to apply with this item
+   * @return
+   */
+  def offer:Offer
+}
+case object Apple extends Item(0.6){
+  /**
+   * Apple's offer:
+   * Buy One Get One Free
+   */
+  val offer:Offer = (2,1)
+}
+case object Orange extends Item(0.25){
+  /**
+   * Orange's offer:
+   * Get 3 for the price of 2
+   */
+  val offer:Offer = (3,1)
+}
 
 object Item {
 
